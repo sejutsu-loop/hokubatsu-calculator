@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>北伐出陣計算機（仮） v0.1</title>
+<title>北伐出陣計算機（仮） v0.1 iframe対応版</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--
@@ -570,6 +570,140 @@ button:hover{filter:brightness(.97)}
     max-width:none;
   }
 }
+
+/* iframe / Hatena blog display adjustments */
+.mobile-notice{
+  display:none;
+  background:#fff7d8;
+  border:1px solid #c9aa5f;
+  padding:14px;
+  margin:10px 0;
+  line-height:1.6;
+}
+.mobile-notice-title{
+  font-weight:bold;
+  color:#5b2c12;
+  font-size:15px;
+  margin-bottom:6px;
+}
+
+/* はてなブログ本文幅など、1000px未満のPCプレビュー用 */
+@media (max-width:1000px) and (min-width:641px){
+  #container{
+    width:100%;
+    max-width:100%;
+    margin:0 auto 20px;
+  }
+  #whiteWrapper{
+    padding:6px;
+  }
+  #gray02Wrapper{
+    padding:8px;
+  }
+  .game-title{
+    font-size:16px;
+  }
+  .deck-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .stage-panel{
+    grid-template-columns:1fr;
+  }
+  .stage-info{
+    min-width:0;
+  }
+  .enemy-info{
+    min-width:0;
+    overflow:hidden;
+  }
+  .preset-side{
+    width:auto;
+  }
+  .preset-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .enemy-input-table{
+    width:100%;
+    table-layout:fixed;
+  }
+  .enemy-input-table th:nth-child(1),
+  .enemy-input-table td:nth-child(1){
+    width:44px;
+  }
+  .enemy-input-table th:nth-child(2),
+  .enemy-input-table td:nth-child(2){
+    width:76px;
+  }
+  .enemy-input-table th:nth-child(3),
+  .enemy-input-table td:nth-child(3){
+    width:auto;
+  }
+  .enemy-input-table select{
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    padding-left:2px;
+    padding-right:2px;
+  }
+  .enemy-input-table .defTroops{
+    width:100%;
+    min-width:0;
+    max-width:none;
+    font-size:14px;
+  }
+  .item-grid{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+  }
+  .item-day{
+    min-width:0;
+  }
+  .item-day b{
+    font-size:12px;
+  }
+  .attack-bulk-bar{
+    align-items:flex-start;
+  }
+}
+
+/* スマホ幅は計算機本体を出さず、案内だけ表示 */
+@media (max-width:640px){
+  #container{
+    width:100%;
+    max-width:100%;
+    margin:0;
+  }
+  #whiteWrapper,
+  #gray02Wrapper{
+    border:0;
+    box-shadow:none;
+    padding:8px;
+  }
+  .mobile-notice{
+    display:block;
+  }
+  .usage-guide,
+  .input-guide,
+  .battle-area,
+  .section-title,
+  .summary-box,
+  .scroll,
+  .row,
+  .footer-note{
+    display:none !important;
+  }
+  .game-title{
+    height:auto;
+    line-height:1.4;
+    padding:10px;
+    font-size:16px;
+  }
+  .game-title .version{
+    float:none;
+    display:inline-block;
+    margin-left:6px;
+  }
+}
+
 </style>
 </head>
 
@@ -578,6 +712,12 @@ button:hover{filter:brightness(.97)}
   <div id="whiteWrapper">
     <div id="gray02Wrapper">
       <h2 class="game-title">北伐出陣計算機（仮） <span class="version">v0.1</span></h2>
+      <div class="mobile-notice">
+        <div class="mobile-notice-title">スマートフォンでは使用できません</div>
+        <p>この計算機は、横幅の広い入力表を使うためPC表示を前提にしています。PCのブラウザで開くか、画面幅の広い環境でご利用ください。</p>
+        <p><a href="https://sejutsu-loop.github.io/hokubatsu-calculator/" target="_blank" rel="noopener">別ウィンドウで開く</a></p>
+      </div>
+
 
       <div class="usage-guide">
         <div class="usage-title">使い方</div>
