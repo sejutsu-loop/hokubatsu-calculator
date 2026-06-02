@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>北伐出陣計算機（仮） v0.1 iframe対応版</title>
+<title>北伐出陣計算機（仮） v0.1 修正版</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--
@@ -704,6 +704,21 @@ button:hover{filter:brightness(.97)}
   }
 }
 
+
+/* wording update: defense guide note */
+.defense-note{
+  margin-top:4px;
+  padding:4px 6px;
+  border:1px solid #d5c4a5;
+  background:#fffaf0;
+  color:#6b4a24;
+  font-size:11px;
+  line-height:1.35;
+}
+.weather{
+  font-size:12px;
+}
+
 </style>
 </head>
 
@@ -722,7 +737,7 @@ button:hover{filter:brightness(.97)}
       <div class="usage-guide">
         <div class="usage-title">使い方</div>
         <ol>
-          <li>攻撃部隊の「使用」にチェックし、兵種と部隊攻撃力を入力します。まとめて設定する場合は「攻撃部隊一括設定」を使います。</li>
+          <li>攻撃部隊の「使用」にチェックし、兵種とゲーム画面に表示された部隊攻撃力を入力します。攻撃力10%アップ等を反映したい場合は、反映後の表示値を入力してください。</li>
           <li>防御側は「同盟挑戦プリセット」を選ぶか、手入力で敵兵・号令を入力します。</li>
           <li>攻撃日数・1日セット数・攻撃力アップアイテムを変更すると、自動で結果が再計算されます。</li>
         </ol>
@@ -755,7 +770,7 @@ button:hover{filter:brightness(.97)}
             </div>
             <div class="stage-name manual" id="currentStageName">プリセット未使用<span class="mode-sub">手入力で設定</span></div>
             <div class="stage-setting">
-              <label class="weather">天候
+              <label class="weather">天候（表示のみ）
                 <select id="weatherSelect">
                   <option value="晴れ">☀ 晴れ</option>
                   <option value="雨">☔ 雨</option>
@@ -767,10 +782,11 @@ button:hover{filter:brightness(.97)}
             <div class="defense-info">
               <span>号令</span>
               <span><input id="defPercent" class="small required-input" type="number" step="1" value="0"> %</span>
-              <span>推定防御力</span>
+              <span>防御力目安</span>
               <span class="defense-power" id="displayDefensePower">0</span>
               <input id="defMul" type="hidden" value="1">
             </div>
+            <div class="defense-note">※先頭の使用部隊の兵種を基準に表示。各攻撃の参照防御は詳細表で確認してください。</div>
           </div>
 
           <div class="enemy-info">
