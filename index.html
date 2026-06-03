@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>北伐出陣計算機（仮） v0.1 修正版</title>
+<title>北伐出陣計算機（仮） v0.1b 兵種選択整理版</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--
-  北伐出陣計算機（仮） v0.1
+  北伐出陣計算機（仮） v0.1b
   Copyright © bra3-sejutsu-loop.
   無断転載・改変再配布禁止。
   個人利用の範囲で使用可。
@@ -726,7 +726,7 @@ button:hover{filter:brightness(.97)}
 <div id="container">
   <div id="whiteWrapper">
     <div id="gray02Wrapper">
-      <h2 class="game-title">北伐出陣計算機（仮） <span class="version">v0.1</span></h2>
+      <h2 class="game-title">北伐出陣計算機（仮） <span class="version">v0.1b</span></h2>
       <div class="mobile-notice">
         <div class="mobile-notice-title">スマートフォンでは使用できません</div>
         <p>この計算機は、横幅の広い入力表を使うためPC表示を前提にしています。PCのブラウザで開くか、画面幅の広い環境でご利用ください。</p>
@@ -737,9 +737,9 @@ button:hover{filter:brightness(.97)}
       <div class="usage-guide">
         <div class="usage-title">使い方</div>
         <ol>
-          <li>攻撃部隊の「使用」にチェックし、兵種とゲーム画面に表示された部隊攻撃力を入力します。攻撃力10%アップ等を反映したい場合は、反映後の表示値を入力してください。</li>
+          <li>攻撃部隊の「使用」にチェックし、兵種とアイテム未使用時の部隊攻撃力を入力します。攻撃力10%UP・北伐出陣攻撃UPは下の各日設定で反映できます。</li>
           <li>防御側は「同盟挑戦プリセット」を選ぶか、手入力で敵兵・号令を入力します。</li>
-          <li>攻撃日数・1日セット数・攻撃力アップアイテムを変更すると、自動で結果が再計算されます。</li>
+          <li>攻撃日数・1日セット数・攻撃力10%UP・北伐出陣攻撃UPを変更すると、自動で結果が再計算されます。</li>
         </ol>
       </div>
 
@@ -818,7 +818,16 @@ button:hover{filter:brightness(.97)}
         </div>
 
         <div class="control-box" style="margin-top:8px">
-          <div class="section-title">攻撃力アップアイテム</div>
+          <div class="section-title">攻撃力10%UP</div>
+          <div class="item-grid" id="item10Grid"></div>
+          <div class="row">
+            <button onclick="setAllAtk10Items(true)">全部ON</button>
+            <button onclick="setAllAtk10Items(false)">全部OFF</button>
+          </div>
+        </div>
+
+        <div class="control-box" style="margin-top:8px">
+          <div class="section-title">北伐出陣攻撃UP</div>
           <div class="item-grid" id="itemGrid"></div>
           <div class="row">
             <button onclick="setAllItems(200)">全日200%</button>
@@ -842,7 +851,7 @@ button:hover{filter:brightness(.97)}
       <div class="scroll"><table class="common-table" id="detailTable"></table></div>
 
       <div class="footer-note">
-        北伐出陣計算機（仮） v0.1 / Copyright © bra3-sejutsu-loop.
+        北伐出陣計算機（仮） v0.1b / Copyright © bra3-sejutsu-loop.
         無断転載・改変再配布禁止。個人利用の範囲で使用可。
       </div>
     </div>
@@ -851,7 +860,7 @@ button:hover{filter:brightness(.97)}
 
 <script>
 /*
-  北伐出陣計算機（仮） v0.1
+  北伐出陣計算機（仮） v0.1b
   Copyright © bra3-sejutsu-loop.
   無断転載・改変再配布禁止。
   個人利用の範囲で使用可。
@@ -860,7 +869,16 @@ button:hover{filter:brightness(.97)}
 
 const DEF_KEYS = ["歩兵","槍兵","弓兵","騎兵","斧兵","双兵","錘兵"];
 const DEF_FAMILY_LABEL = {"歩兵":"剣防御","槍兵":"槍防御","弓兵":"弓防御","騎兵":"騎防御","斧兵":"斧防御","双兵":"双防御","錘兵":"錘防御"};
-const ATTACK_TYPES = ["剣兵","大剣兵","盾兵","重盾兵","槍兵","矛兵","弓兵","弩兵","騎兵","近衛騎兵","戦斧兵","双剣兵","大錘兵"];
+const ATTACK_TYPES = ["戦斧兵","双剣兵","大錘兵","大剣兵","矛兵","弩兵","近衛騎兵"];
+const ATTACK_LABEL = {
+  "戦斧兵":"戦斧兵",
+  "双剣兵":"双剣兵",
+  "大錘兵":"大錘兵",
+  "大剣兵":"大剣兵",
+  "矛兵":"矛槍兵",
+  "弩兵":"弩兵",
+  "近衛騎兵":"近衛騎兵"
+};
 const FAMILY_OF = {
   "剣兵":"歩兵","大剣兵":"歩兵","盾兵":"歩兵","重盾兵":"歩兵",
   "槍兵":"槍兵","矛兵":"槍兵","弓兵":"弓兵","弩兵":"弓兵",
@@ -909,7 +927,7 @@ function makeSelect(options, value){
   for(const item of options){
     const option = document.createElement("option");
     option.value = String(item);
-    option.textContent = String(item);
+    option.textContent = ATTACK_LABEL?.[item] || String(item);
     if(String(item) === String(value)) option.selected = true;
     select.appendChild(option);
   }
@@ -923,7 +941,7 @@ function setupAttackBulkControls(){
   for(const type of ATTACK_TYPES){
     const option = document.createElement("option");
     option.value = type;
-    option.textContent = SHORT[type] || type;
+    option.textContent = ATTACK_LABEL?.[type] || type;
     if(type === "戦斧兵") option.selected = true;
     select.appendChild(option);
   }
@@ -951,6 +969,7 @@ function init(){
   buildAttackCards();
   setupAttackBulkControls();
   buildDefenseInputs();
+  buildAtk10Grid();
   buildItemGrid();
 
   document.querySelectorAll("[data-preset]").forEach(button => {
@@ -1028,6 +1047,22 @@ function buildDefenseInputs(){
       }
     });
     body.appendChild(row);
+  }
+}
+
+function buildAtk10Grid(){
+  const grid = $("item10Grid");
+  grid.innerHTML = "";
+  for(let day=1; day<=10; day++){
+    const box = document.createElement("div");
+    box.className = "item-day";
+    box.innerHTML = `<b>${day}日目</b><br>`;
+    const select = makeSelect(["OFF","ON"], "OFF");
+    select.className = "atk10Rate";
+    select.dataset.day = day;
+    select.addEventListener("change", runSim);
+    box.appendChild(select);
+    grid.appendChild(box);
   }
 }
 
@@ -1207,6 +1242,11 @@ function resetPresetManual(){
   refreshAll();
 }
 
+function setAllAtk10Items(on){
+  document.querySelectorAll(".atk10Rate").forEach(select => select.value = on ? "ON" : "OFF");
+  runSim();
+}
+
 function setAllItems(rate){
   document.querySelectorAll(".itemRate").forEach(select => select.value = String(rate));
   runSim();
@@ -1235,6 +1275,11 @@ function getAttackers(){
       power: parseNum(card.querySelector(".atkPower").value)
     };
   }).filter(a => a.use && a.power > 0 && a.family);
+}
+
+function getAtk10Rate(day){
+  const select = document.querySelector(`.atk10Rate[data-day="${day}"]`);
+  return select && select.value === "ON" ? 10 : 0;
 }
 
 function getItemRate(day){
@@ -1346,8 +1391,9 @@ function allocateLosses(defTroops,totalLoss){
 }
 
 function simulateOneBattle(defTroops,attacker,day,setNo,unitNo,attackNo,opts){
+  const atk10Rate = getAtk10Rate(day);
   const itemRate = getItemRate(day);
-  const A = attacker.power * itemRateToMult(itemRate);
+  const A = attacker.power * itemRateToMult(atk10Rate) * itemRateToMult(itemRate);
   const D = calcEffectiveDefense(defTroops, attacker.family, opts.defMul);
   const ratio = D > 0 ? A / D : Infinity;
   const rates = calcBattleRates(A,D);
@@ -1366,6 +1412,7 @@ function simulateOneBattle(defTroops,attacker,day,setNo,unitNo,attackNo,opts){
     unitName:attacker.name,
     atkType:attacker.type,
     defFamily:attacker.family,
+    atk10Rate,
     itemRate, A, D, x:ratio,
     rawDefRate:rates.rawDefRate,
     defRate:rates.defRate,
@@ -1435,6 +1482,7 @@ function runSim(){
 
     daily.push({
       day,
+      atk10Rate:getAtk10Rate(day),
       itemRate:getItemRate(day),
       attacks:count,
       start,
@@ -1491,10 +1539,10 @@ function getUsedDefenseTypesFromRows(rows){
 
 function renderDaily(rows){
   const used = getUsedDefenseTypesFromRows(lastDetailRows);
-  let html = `<thead><tr><th>日</th><th>アイテム</th><th>攻撃数</th><th>日始兵数</th><th>防御損耗</th><th>日末兵数</th><th>累計ダメージ</th>${used.map(k => `<th>${k}</th>`).join("")}</tr></thead><tbody>`;
+  let html = `<thead><tr><th>日</th><th>10%UP</th><th>北伐UP</th><th>攻撃数</th><th>日始兵数</th><th>防御損耗</th><th>日末兵数</th><th>累計ダメージ</th>${used.map(k => `<th>${k}</th>`).join("")}</tr></thead><tbody>`;
 
   for(const r of rows){
-    html += `<tr><td>${r.day}</td><td>${r.itemRate}%</td><td>${r.attacks}</td><td>${fmt(r.start)}</td><td>${fmt(r.loss)}</td><td>${fmt(r.end)}</td><td>${pct(r.damage,2)}</td>${used.map(k => `<td>${fmt(r.troops[k] || 0)}</td>`).join("")}</tr>`;
+    html += `<tr><td>${r.day}</td><td>${r.atk10Rate ? "ON" : "OFF"}</td><td>${r.itemRate}%</td><td>${r.attacks}</td><td>${fmt(r.start)}</td><td>${fmt(r.loss)}</td><td>${fmt(r.end)}</td><td>${pct(r.damage,2)}</td>${used.map(k => `<td>${fmt(r.troops[k] || 0)}</td>`).join("")}</tr>`;
   }
 
   $("dailyTable").innerHTML = html + "</tbody>";
@@ -1507,11 +1555,11 @@ function renderDetails(rows,initialTotal,show){
   }
 
   const used = getUsedDefenseTypesFromRows(rows);
-  let html = `<thead><tr><th>No</th><th>日</th><th>セット</th><th>部隊</th><th>兵種</th><th>参照防御</th><th>アイテム</th><th>攻撃力A</th><th>総防御D<br><span style="font-size:10px">残兵×兵種</span></th><th>A/D</th><th>防御損耗率</th><th>防御総損耗</th>${used.map(k => `<th>${k}損耗</th>`).join("")}<th>残兵合計</th><th>累計ダメージ</th></tr></thead><tbody>`;
+  let html = `<thead><tr><th>No</th><th>日</th><th>セット</th><th>部隊</th><th>兵種</th><th>参照防御</th><th>10%UP</th><th>北伐UP</th><th>攻撃力A</th><th>総防御D<br><span style="font-size:10px">残兵×兵種</span></th><th>A/D</th><th>防御損耗率</th><th>防御総損耗</th>${used.map(k => `<th>${k}損耗</th>`).join("")}<th>残兵合計</th><th>累計ダメージ</th></tr></thead><tbody>`;
 
   for(const r of rows){
     const damage = initialTotal > 0 ? 1 - r.remainingTotal / initialTotal : 1;
-    html += `<tr><td>${r.attackNo}</td><td>${r.day}</td><td>${r.setNo}</td><td class="left">${escapeHtml(r.unitName)}</td><td>${r.atkType}</td><td>${DEF_FAMILY_LABEL[r.defFamily] || r.defFamily || ""}</td><td>${r.itemRate}%</td><td>${fmt(r.A)}</td><td>${fmt(r.D)}</td><td>${Number.isFinite(r.x) ? r.x.toFixed(5) : "∞"}</td><td>${pct(r.rawDefRate,4)}</td><td>${fmt(r.totalDefLoss)}</td>${used.map(k => `<td>${fmt(r.losses[k] || 0)}</td>`).join("")}<td>${fmt(r.remainingTotal)}</td><td>${pct(damage,2)}</td></tr>`;
+    html += `<tr><td>${r.attackNo}</td><td>${r.day}</td><td>${r.setNo}</td><td class="left">${escapeHtml(r.unitName)}</td><td>${r.atkType}</td><td>${DEF_FAMILY_LABEL[r.defFamily] || r.defFamily || ""}</td><td>${r.atk10Rate ? "ON" : "OFF"}</td><td>${r.itemRate}%</td><td>${fmt(r.A)}</td><td>${fmt(r.D)}</td><td>${Number.isFinite(r.x) ? r.x.toFixed(5) : "∞"}</td><td>${pct(r.rawDefRate,4)}</td><td>${fmt(r.totalDefLoss)}</td>${used.map(k => `<td>${fmt(r.losses[k] || 0)}</td>`).join("")}<td>${fmt(r.remainingTotal)}</td><td>${pct(damage,2)}</td></tr>`;
   }
 
   $("detailTable").innerHTML = html + "</tbody>";
@@ -1535,6 +1583,7 @@ function refreshAll(){
   runSim();
 }
 
+window.setAllAtk10Items = setAllAtk10Items;
 window.setAllItems = setAllItems;
 window.runSim = runSim;
 document.addEventListener("DOMContentLoaded", init);
